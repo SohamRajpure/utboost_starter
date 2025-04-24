@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "pytest-dev__pytest-7490",
+    "model_patch": "diff --git a/reproduce_error.py b/reproduce_error.py\nnew file mode 100644\nindex 000000000..e1d30df0c\n--- /dev/null\n+++ b/reproduce_error.py\n@@ -0,0 +1,6 @@\n+import pytest\n+\n+def test_xfail_test(request):\n+    mark = pytest.mark.xfail(reason=\"xfail\")\n+    request.node.add_marker(mark)\n+    assert 0\n\\ No newline at end of file\ndiff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 335e10996..a81e1e425 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -261,6 +261,9 @@ def pytest_runtest_call(item: Item) -> Generator[None, None, None]:\n def pytest_runtest_makereport(item: Item, call: CallInfo[None]):\n     outcome = yield\n     rep = outcome.get_result()\n+    # Re-evaluate xfail marks to catch dynamically added ones\n+    if call.when == \"call\":\n+        item._store[xfailed_key] = evaluate_xfail_marks(item)\n     xfailed = item._store.get(xfailed_key, None)\n     # unittest special case, see setting of unexpectedsuccess_key\n     if unexpectedsuccess_key in item._store and rep.when == \"call\":\n",
+    "model_name_or_path": "codestory-midwit"
+  }
+]

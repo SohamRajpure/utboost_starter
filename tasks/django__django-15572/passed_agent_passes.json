@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "django__django-15572",
+    "model_patch": "diff --git a/django/template/autoreload.py b/django/template/autoreload.py\nindex edaefa0f57..680fbc406d 100644\n--- a/django/template/autoreload.py\n+++ b/django/template/autoreload.py\n@@ -17,7 +17,11 @@\n         if not isinstance(backend, DjangoTemplates):\n             continue\n \n-        items.update(cwd / to_path(dir) for dir in backend.engine.dirs)\n+        items.update(\n+            cwd / to_path(dir)\n+            for dir in backend.engine.dirs\n+            if dir and not str(dir).isspace()\n+        )\n \n         for loader in backend.engine.template_loaders:\n             if not hasattr(loader, \"get_dirs\"):\n@@ -25,7 +30,7 @@\n             items.update(\n                 cwd / to_path(directory)\n                 for directory in loader.get_dirs()\n-                if not is_django_path(directory)\n+                if directory and not str(directory).isspace() and not is_django_path(directory)\n             )\n     return items\n \n@@ -49,6 +54,8 @@\n     if file_path.suffix == \".py\":\n         return\n     for template_dir in get_template_directories():\n+        if not template_dir.exists() or template_dir == Path.cwd():\n+            continue\n         if template_dir in file_path.parents:\n             reset_loaders()\n             return True",
+    "model_name_or_path": "b4eeb08ddfa043d1866685d80627179a"
+  }
+]

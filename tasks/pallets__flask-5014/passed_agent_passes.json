@@ -1,0 +1,7 @@
+[
+  {
+    "instance_id": "pallets__flask-5014",
+    "model_patch": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\nindex eb50585d..290a77de 100644\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -192,6 +192,9 @@ class Blueprint(Scaffold):\n \n         if \".\" in name:\n             raise ValueError(\"'name' may not contain a dot '.' character.\")\n+        # Check for empty string, whitespace, and zero-width characters\n+        if not name or not ''.join(c for c in name if c.isprintable() and not c.isspace()):\n+            raise ValueError(\"'name' may not be empty or contain only whitespace.\")\n \n         self.name = name\n         self.url_prefix = url_prefix\n",
+    "model_name_or_path": "epam-ai-run"
+  }
+]
